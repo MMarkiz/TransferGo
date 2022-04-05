@@ -5,9 +5,13 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="com.transfergo.currencyconverter.feature.converter.ConverterViewModel.FxRatesStatus" />
+
         <variable
-            name="fragment"
-            type="com.transfergo.currencyconverter.feature.converter.MainFragment" />
+            name="viewModel"
+            type="com.transfergo.currencyconverter.feature.converter.ConverterViewModel" />
 
     </data>
 
@@ -15,15 +19,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        android:padding="16dp"
-        tools:context=".feature.converter.MainFragment">
+        android:padding="@dimen/standard_100"
+        tools:context=".feature.converter.ConverterFragment">
 
         <TextView
             android:id="@+id/fromEditTextLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="FROM:"
-            android:textSize="10sp"
+            android:text="@string/converter_from"
+            android:textSize="@dimen/text_size_normal"
             app:layout_constraintStart_toStartOf="@+id/fromInputLayout"
             app:layout_constraintTop_toTopOf="@+id/fromInputLayout" />
 
@@ -32,7 +36,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="@dimen/standard_100"
             app:endIconDrawable="@drawable/ic_arrow_down_24"
             app:endIconMode="custom"
             app:layout_constraintEnd_toStartOf="@+id/arrowsImageView"
@@ -45,30 +49,35 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:drawableStart="@drawable/ic_currency_eur_small"
-                android:drawablePadding="8dp"
+                android:drawablePadding="@dimen/standard_50"
                 android:editable="false"
+                android:inputType="none"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
-                android:text="EUR" />
+                app:currency="@{viewModel.currencyFrom}"
+                tools:ignore="LabelFor" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <ImageView
             android:id="@+id/arrowsImageView"
-            android:layout_width="32dp"
+            android:layout_width="@dimen/standard_200"
             android:layout_height="0dp"
+            android:enabled="@{!(viewModel.FxRatesStatus instanceof FxRatesStatus.Loading)}"
+            android:onClick="@{() -> viewModel.switchCurrencies()}"
             android:src="@drawable/ic_arrows_24"
             app:layout_constraintBottom_toBottomOf="@id/fromInputLayout"
             app:layout_constraintEnd_toStartOf="@id/toEditText"
             app:layout_constraintStart_toEndOf="@id/fromInputLayout"
-            app:layout_constraintTop_toTopOf="@id/fromInputLayout" />
+            app:layout_constraintTop_toTopOf="@id/fromInputLayout"
+            tools:ignore="ContentDescription" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/toEditText"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/standard_100"
             app:endIconDrawable="@drawable/ic_arrow_down_24"
             app:endIconMode="custom"
             app:layout_constraintEnd_toEndOf="parent"
@@ -80,12 +89,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
-                android:drawableStart="@drawable/ic_currency_gbp_small"
-                android:drawablePadding="8dp"
+                android:drawablePadding="@dimen/standard_50"
                 android:editable="false"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
-                android:text="GBP" />
+                app:currency="@{viewModel.currencyTo}"
+                tools:ignore="LabelFor" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -93,9 +102,9 @@
             android:id="@+id/toInputLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="TO:"
-            android:textSize="10sp"
+            android:layout_marginTop="@dimen/standard_50"
+            android:text="@string/converter_to"
+            android:textSize="@dimen/text_size_normal"
             app:layout_constraintStart_toStartOf="@+id/toEditText"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -103,9 +112,9 @@
             android:id="@+id/amountEditTextLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="AMOUNT:"
-            android:textSize="10sp"
+            android:layout_marginTop="@dimen/standard_200"
+            android:text="@string/converter_amount"
+            android:textSize="@dimen/text_size_normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fromInputLayout" />
 
@@ -113,8 +122,8 @@
             android:id="@+id/amountCurrencyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="EUR"
+            android:layout_marginEnd="@dimen/standard_50"
+            android:text="@{viewModel.currencyFrom.name()}"
             app:layout_constraintBottom_toBottomOf="@+id/amountEditText"
             app:layout_constraintEnd_toEndOf="@+id/amountEditText"
             app:layout_constraintTop_toTopOf="@+id/amountEditText" />
@@ -123,24 +132,28 @@
             android:id="@+id/amountEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
+            android:layout_marginEnd="@dimen/standard_200"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
             android:lines="1"
-            android:paddingEnd="32dp"
+            android:paddingEnd="@dimen/standard_200"
+            android:text="@={viewModel.mutableAmount}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="@id/convertedToEditText"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/amountEditTextLabelTextView"
             app:layout_goneMarginEnd="0dp"
+            tools:ignore="RtlSymmetry"
             tools:text="3.23984892479384723894723894789244" />
 
         <TextView
             android:id="@+id/convertedToEditTextLabelTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="CONVERTED TO:"
-            android:textSize="10sp"
-            android:visibility="gone"
+            android:layout_marginTop="@dimen/standard_200"
+            android:text="@string/converter_converted_to"
+            android:textSize="@dimen/text_size_normal"
+            android:visibility="@{(viewModel.isFirstConversionDone()) ? View.VISIBLE : View.GONE}"
             app:layout_constraintStart_toStartOf="@+id/convertedToEditText"
             app:layout_constraintTop_toBottomOf="@+id/fromInputLayout"
             tools:visibility="visible" />
@@ -149,24 +162,29 @@
             android:id="@+id/convertedToCurrencyTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="EUR"
-            android:visibility="gone"
+            android:text="@{viewModel.currencyTo.name()}"
+            android:visibility="@{(viewModel.isFirstConversionDone()) ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/amountEditText"
             app:layout_constraintEnd_toEndOf="@+id/convertedToEditText"
             app:layout_constraintTop_toTopOf="@+id/amountEditText"
+            tools:text="@string/currency_eur"
             tools:visibility="visible" />
 
         <EditText
             android:id="@+id/convertedToEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="@dimen/standard_200"
+            android:importantForAutofill="no"
+            android:inputType="numberDecimal"
             android:lines="1"
-            android:paddingEnd="32dp"
-            android:visibility="gone"
+            android:paddingEnd="@dimen/standard_200"
+            android:text="@{viewModel.convertedToAmount}"
+            android:visibility="@{(viewModel.isFirstConversionDone()) ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/amountEditText"
             app:layout_constraintTop_toBottomOf="@+id/amountEditTextLabelTextView"
+            tools:ignore="RtlSymmetry"
             tools:text="3.23984892479384723894723894789244"
             tools:visibility="visible" />
 
@@ -174,10 +192,11 @@
             android:id="@+id/convertButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="#59CF5E"
-            android:onClick="@{() -> fragment.convert()}"
-            android:text="Convert"
+            android:layout_marginTop="@dimen/standard_200"
+            android:backgroundTint="@color/green"
+            android:enabled="@{!(viewModel.FxRatesStatus instanceof FxRatesStatus.Loading)}"
+            android:onClick="@{() -> viewModel.convertCurrencies()}"
+            android:text="@string/converter_convert"
             android:textAllCaps="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

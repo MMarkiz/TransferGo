@@ -1,6 +1,10 @@
 package com.transfergo.currencyconverter.data.api
 
 import androidx.viewbinding.BuildConfig
+import com.transfergo.currencyconverter.data.api.mappers.FxRatesMapper
+import com.transfergo.currencyconverter.data.api.repositories.RatesRepositoryImpl
+import com.transfergo.currencyconverter.data.api.services.RatesService
+import com.transfergo.currencyconverter.domain.RatesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +27,8 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
-        level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
+        level =
+            if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
     }
 
     @Singleton
@@ -49,5 +54,6 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+    fun provideApiService(retrofit: Retrofit): RatesService =
+        retrofit.create(RatesService::class.java)
 }

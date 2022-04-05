@@ -1,4 +1,19 @@
 <resources>
     <string name="app_name">Currency converter</string>
     <string name="main_fragment_label">Currency converter</string>
+
+    <string name="converter_from">FROM:</string>
+    <string name="converter_to">TO:</string>
+    <string name="converter_amount">AMOUNT:</string>
+    <string name="converter_converted_to">CONVERTED TO:</string>
+    <string name="converter_convert">Convert</string>
+
+    <string name="currency_eur">EUR</string>
+    <string name="currency_gbp">GBP</string>
+    <string name="currency_dkk">DKK</string>
+    <string name="currency_huf">HUF</string>
+    <string name="currency_nok">NOK</string>
+    <string name="currency_pln">PLN</string>
+    <string name="currency_ron">RON</string>
+    <string name="currency_sek">SEK</string>
 </resources>
